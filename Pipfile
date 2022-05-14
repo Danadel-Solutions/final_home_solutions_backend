@@ -17,8 +17,13 @@ pyaml = "*"
 uritemplate = "*"
 pyyaml = "*"
 drf-yasg = "*"
+psycopg2 = "*"
 
 [dev-packages]
+black = "*"
 
 [requires]
 python_version = "3.10"
+
+[pipenv]
+allow_prereleases = true
