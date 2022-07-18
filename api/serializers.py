@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import PhotoBook, Property
+from .models import Property
 
 
 class PropertySerializer(serializers.ModelSerializer):
@@ -7,7 +7,7 @@ class PropertySerializer(serializers.ModelSerializer):
     seller_name = serializers.ReadOnlyField(source="seller.username")
     cover_photo = serializers.ImageField()
     seller_date_joined = serializers.ReadOnlyField(source="seller.date_joined")
-    photos = serializers.SerializerMethodField()
+    # photos = serializers.SerializerMethodField()
     seller_phone_number = serializers.ReadOnlyField(source="seller.phone")
 
     class Meta:
@@ -23,20 +23,18 @@ class PropertySerializer(serializers.ModelSerializer):
             "cover_photo",
             "price",
             "type",
+            "purpose",
             "location",
             "address",
             "added",
             "seller_date_joined",
-            "photos",
+            # "photos",
             "toilet_count",
             "bathroom_count",
             "bedroom_count",
             "seller_phone_number",
         ]
 
-    def get_photos(self, obj):
-        # photos = obj.photos.all()
-        # This work better for me, because Books objects doesn´t have
-        # the attribute photos, but PhotoBooks, contain the ```book_id```
-        photos = PhotoBook.objects.filter(book=obj.id)
-        return [photo.image.url for photo in photos]
+    # def get_photos(self, obj):
+    #     photos = PhotoBook.objects.filter(book=obj.id)
+    #     return [photo.image.url for photo in photos]

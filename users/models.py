@@ -5,9 +5,9 @@ from django.contrib.auth.models import AbstractUser
 
 
 GENDER_SELECTION = [
-    ('M', 'Male'),
-    ('F', 'Female'),
-    ('NS', 'Not Specified'),
+    ("M", "Male"),
+    ("F", "Female"),
+    ("NS", "Not Specified"),
 ]
 
 
@@ -18,4 +18,4 @@ class CustomUser(AbstractUser):
     middle_name = models.CharField(max_length=250)
     last_name = models.CharField(max_length=250)
     phone_number = models.CharField(max_length=30)
-    date_joined = models.DateTimeField(auto_now_add=True )
+    date_joined = models.DateTimeField(auto_now_add=True)
