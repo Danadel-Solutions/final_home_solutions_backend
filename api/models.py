@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.conf import settings
 
 PROPERTY_PURPOSE_SELECT = [
     ("rent", "Rent"),
@@ -26,7 +27,7 @@ class Property(models.Model):
     toilet_count = models.IntegerField(default=1)
     parking_space = models.IntegerField(default=1)
     seller = models.ForeignKey(
-        get_user_model(), default=1, null=True, on_delete=models.SET_NULL
+        settings.AUTH_USER_MODEL, default=1, null=True, on_delete=models.CASCADE
     )
     price = models.IntegerField(blank=False, null=False, default=100000000)
     location = models.CharField(
@@ -47,9 +48,9 @@ class Property(models.Model):
         return self.first_title
 
 
-# class PhotoBook(models.Model):
-#     book = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="photos")
-#     image = models.ImageField(blank=True, null=True)
+class PhotoBook(models.Model):
+    property = models.ForeignKey(Property, on_delete=models.CASCADE, related_name="photos")
+    image = models.ImageField(blank=True, null=True)
 
-#     def __str__(self):
-#         return self.image
+    def __str__(self):
+        return self.image

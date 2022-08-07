@@ -12,18 +12,28 @@
 # urlpatterns = router.urls
 
 from django.urls import path
+
+# from .views import (
+#     get_properties,
+#     get_property,
+#     create_property,
+#     update_property,
+#     get_user_properties,
+#     upload_image,
+# )
 from .views import (
-    get_properties,
-    get_property,
-    create_property,
-    update_property,
-    get_user_properties,
+    PropertyListView,
+    PropertyDetailView,
+    PropertyCreateView,
+    PropertySearchView,
 )
 
 urlpatterns = [
-    path("properties/", get_properties, name="properties"),
-    path("user/properties/<str:pk>/", get_user_properties, name="get-user-properties"),
-    path("properties/add/", create_property, name="property-create"),
-    path("properties/<str:pk>/", get_property, name="property"),
-    path("properties/update/<str:pk>/", update_property, name="property-update"),
+    path("properties/", PropertyListView.as_view(), name="properties"),
+    # path("user/properties/<str:pk>/", get_user_properties, name="get-user-properties"),
+    path("properties/add/", PropertyCreateView.as_view(), name="property-create"),
+    path("properties/search/", PropertySearchView.as_view(), name="property-search"),
+    path("properties/<str:pk>/", PropertyDetailView.as_view(), name="property"),
+    # path("properties/update/<str:pk>/", update_property, name="property-update"),
+    # path("uploads/", upload_image),
 ]

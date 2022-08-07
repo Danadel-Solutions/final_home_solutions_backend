@@ -3,7 +3,7 @@ info:
   title: ''
   version: ''
 paths:
-  /users/dj-rest-auth/logout/:
+  /users/logout/:
     get:
       operationId: listLogouts
       description: 'Calls Django logout method and delete the Token object
@@ -48,7 +48,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/user/:
+  /users/user/:
     get:
       operationId: retrieveCustomUserDetails
       description: 'Reads and updates UserModel fields
@@ -162,30 +162,6 @@ paths:
           description: ''
       tags:
       - api
-    post:
-      operationId: createProperty
-      description: ''
-      parameters: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Property'
-          application/x-www-form-urlencoded:
-            schema:
-              $ref: '#/components/schemas/Property'
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/Property'
-      responses:
-        '201':
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Property'
-          description: ''
-      tags:
-      - api
   /api/properties/{id}/:
     get:
       operationId: retrieveProperty
@@ -281,7 +257,7 @@ paths:
           description: ''
       tags:
       - api
-  /users/dj-rest-auth/account-confirm-email/:
+  /users/account-confirm-email/:
     post:
       operationId: createVerifyEmail
       description: ''
@@ -306,7 +282,37 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/password/reset/:
+  /users/account-change-password/:
+    post:
+      operationId: createPasswordChange
+      description: 'Calls Django Auth SetPasswordForm save method.
+
+
+        Accepts the following POST parameters: new_password1, new_password2
+
+        Returns the success/fail message.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/PasswordChange'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasswordChange'
+          description: ''
+      tags:
+      - users
+  /users/password/reset/:
     post:
       operationId: createPasswordReset
       description: 'Calls Django Auth PasswordResetForm save method.
@@ -336,7 +342,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/password/reset/confirm/:
+  /users/password/reset/confirm/:
     post:
       operationId: createPasswordResetConfirm
       description: "Password reset e-mail link is confirmed, therefore\nthis resets\
@@ -363,7 +369,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/login/:
+  /users/login/:
     post:
       operationId: createLogin
       description: 'Check the credentials and return the REST Token
@@ -399,7 +405,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/password/change/:
+  /users/password/change/:
     post:
       operationId: createPasswordChange
       description: 'Calls Django Auth SetPasswordForm save method.
@@ -429,7 +435,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/token/verify/:
+  /users/token/verify/:
     post:
       operationId: createTokenVerify
       description: 'Takes a token and indicates if it is valid.  This view provides
@@ -457,7 +463,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/token/refresh/:
+  /users/token/refresh/:
     post:
       operationId: createCookieTokenRefresh
       description: ''
@@ -482,7 +488,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/registration/:
+  /users/registration/:
     post:
       operationId: createCustomRegister
       description: ''
@@ -507,7 +513,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/registration/verify-email/:
+  /users/registration/verify-email/:
     post:
       operationId: createVerifyEmail
       description: ''
@@ -532,7 +538,7 @@ paths:
           description: ''
       tags:
       - users
-  /users/dj-rest-auth/registration/resend-email/:
+  /users/registration/resend-email/:
     post:
       operationId: createEmailAddress
       description: ''
@@ -557,6 +563,52 @@ paths:
           description: ''
       tags:
       - users
+  /users/token/blacklist/:
+    post:
+      operationId: createTokenBlacklist
+      description: 'Takes a token and blacklists it. Must be used with the
+
+        `rest_framework_simplejwt.token_blacklist` app installed.'
+      parameters: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/TokenBlacklist'
+      responses:
+        '201':
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenBlacklist'
+          description: ''
+      tags:
+      - users
+  /api/properties/add/:
+    post:
+      operationId: createProperty
+      description: ''
+      parameters: []
+      requestBody:
+        content:
+          multipart/form-data:
+            schema: {}
+          application/x-www-form-urlencoded:
+            schema: {}
+      responses:
+        '201':
+          content:
+            application/json:
+              schema: {}
+          description: ''
+      tags:
+      - api
 components:
   schemas:
     CustomUserDetails:
@@ -581,6 +633,10 @@ components:
         phone_number:
           type: string
           maxLength: 30
+        date_joined:
+          type: string
+          format: date-time
+          readOnly: true
       required:
       - first_name
       - middle_name
@@ -600,12 +656,67 @@ components:
           maxLength: 250
         description:
           type: string
-        cover_photo:
-          type: string
-          format: binary
         seller:
           type: integer
           nullable: true
+        seller_id:
+          type: string
+          readOnly: true
+        seller_name:
+          type: string
+          readOnly: true
+        cover_photo:
+          type: string
+          format: binary
+        price:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        type:
+          enum:
+          - flat
+          - land
+          - house
+          - commercial
+          type: string
+        purpose:
+          enum:
+          - rent
+          - sale
+          - shortlet
+          - land
+          type: string
+        location:
+          type: string
+          maxLength: 250
+        address:
+          type: string
+          maxLength: 250
+        added:
+          type: string
+          format: date-time
+          readOnly: true
+        seller_date_joined:
+          type: string
+          readOnly: true
+        photos:
+          type: string
+          readOnly: true
+        toilet_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        bathroom_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        bedroom_count:
+          type: integer
+          maximum: 2147483647
+          minimum: -2147483648
+        seller_phone_number:
+          type: string
+          readOnly: true
       required:
       - first_title
       - second_title
@@ -617,6 +728,18 @@ components:
           type: string
       required:
       - key
+    PasswordChange:
+      type: object
+      properties:
+        new_password1:
+          type: string
+          maxLength: 128
+        new_password2:
+          type: string
+          maxLength: 128
+      required:
+      - new_password1
+      - new_password2
     PasswordReset:
       type: object
       properties:
@@ -655,18 +778,6 @@ components:
           type: string
       required:
       - password
-    PasswordChange:
-      type: object
-      properties:
-        new_password1:
-          type: string
-          maxLength: 128
-        new_password2:
-          type: string
-          maxLength: 128
-      required:
-      - new_password1
-      - new_password2
     TokenVerify:
       type: object
       properties:
@@ -711,6 +822,9 @@ components:
         phone_number:
           type: string
           maxLength: 30
+        date_joined:
+          type: string
+          format: date-time
       required:
       - email
       - password1
@@ -719,6 +833,7 @@ components:
       - middle_name
       - last_name
       - phone_number
+      - date_joined
     ResendEmailVerification:
       type: object
       properties:
@@ -727,3 +842,10 @@ components:
           format: email
       required:
       - email
+    TokenBlacklist:
+      type: object
+      properties:
+        refresh:
+          type: string
+      required:
+      - refresh
