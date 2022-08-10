@@ -50,10 +50,14 @@ class PropertySearchView(ListAPIView):
         purpose = self.request.GET.get("p")
         location = self.request.GET.get("loc")
         type = self.request.GET.get("type")
+        max_price = self.request.GET.get("max-price")
+        min_price = self.request.GET.get("min-price")
         return Property.objects.filter(
             Q(location__icontains=location)
             & Q(purpose__icontains=purpose)
             & Q(type__icontains=type)
+            & Q(price__gte=min_price)
+            & Q(price__lte=max_price)
         )
 
 
